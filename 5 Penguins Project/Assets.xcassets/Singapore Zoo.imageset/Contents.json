@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "5e96b8a1e66f60230257c7b3_Singapore-Zoo-1.jpg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "5e96b8a1e66f60230257c7b3_Singapore-Zoo-1 1.jpg",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "5e96b8a1e66f60230257c7b3_Singapore-Zoo-1 2.jpg",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

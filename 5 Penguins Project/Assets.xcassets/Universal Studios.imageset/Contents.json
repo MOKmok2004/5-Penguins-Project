@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "f6dbdc74dbbfe0caa8a3d567b3d344cb-7560-singapore-universal-studios-singapore-vip-experience-05.jpg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "f6dbdc74dbbfe0caa8a3d567b3d344cb-7560-singapore-universal-studios-singapore-vip-experience-05 1.jpg",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "f6dbdc74dbbfe0caa8a3d567b3d344cb-7560-singapore-universal-studios-singapore-vip-experience-05 2.jpg",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
