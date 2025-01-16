@@ -9,6 +9,66 @@ import SwiftUI
 import MapKit
 import CoreLocation
 
+// Add these model definitions near the top of your file
+struct Friend: Identifiable, Hashable {
+    let id = UUID()
+    let username: String
+    let penguinOutfit: PenguinOutfit
+    let status: String
+    let isOnline: Bool
+    let level: Int
+    let totalActivities: Int
+    let posts: [UserPost]
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: Friend, rhs: Friend) -> Bool {
+        lhs.id == rhs.id
+    }
+}
+
+struct UserPost: Identifiable {
+    let id = UUID()
+    let activityTitle: String
+    let image: String
+    let caption: String
+    let rating: Double
+    let likes: Int
+    let timestamp: String
+    let userImage: String
+    let username: String
+}
+
+struct PenguinOutfit {
+    let hat: String?
+    let clothes: String?
+    let accessories: String?
+}
+
+// Add sample discovery friends
+let discoveryFriends = [
+    Friend(
+        username: "Mike Wong",
+        penguinOutfit: PenguinOutfit(hat: nil, clothes: nil, accessories: nil),
+        status: "Offline",
+        isOnline: false,
+        level: 3,
+        totalActivities: 8,
+        posts: []
+    ),
+    Friend(
+        username: "Emma Lee",
+        penguinOutfit: PenguinOutfit(hat: nil, clothes: nil, accessories: nil),
+        status: "Online",
+        isOnline: true,
+        level: 4,
+        totalActivities: 15,
+        posts: []
+    )
+]
+
 struct ContentView: View {
     @State private var isLoading = true
     @State private var isMenuOpen = false
@@ -395,8 +455,8 @@ struct SideMenuView: View {
     @State private var showDicePlanner = false
     @State private var showActivities = false
     @State private var showMapPlanner = false
+    @State private var showFriends = false  // Add this line
     
-    // Add Map Planner to menu items
     let menuItems = ["Dice Planner", "Map Planner", "Activities", "Friends", "Settings"]
     
     var body: some View {
@@ -423,8 +483,10 @@ struct SideMenuView: View {
                                     showMapPlanner = true
                                 case "Activities":
                                     showActivities = true
-                                case "Friends", "Settings":
-                                    // Handle other menu items
+                                case "Friends":
+                                    showFriends = true  // Add this case
+                                case "Settings":
+                                    // Handle settings
                                     break
                                 default:
                                     break
@@ -463,6 +525,9 @@ struct SideMenuView: View {
         }
         .sheet(isPresented: $showActivities) {
             ActivitiesView()
+        }
+        .sheet(isPresented: $showFriends) {  // Add this sheet
+            FriendsView()
         }
     }
     
@@ -3149,5 +3214,334 @@ struct CommentRow: View {
         .padding()
         .background(Color(red: 0.15, green: 0.25, blue: 0.45))
         .cornerRadius(10)
+    }
+}
+
+struct FriendsView: View {
+    @Environment(\.presentationMode) var presentationMode
+    @State private var searchText = ""
+    @State private var selectedSegment = 0
+    @State private var selectedFriend: Friend? = nil
+    
+    // Sample friends data
+    let friends = [
+        Friend(
+            username: "Sarah Chen",
+            penguinOutfit: PenguinOutfit(hat: nil, clothes: nil, accessories: nil),
+            status: "Online",
+            isOnline: true,
+            level: 5,
+            totalActivities: 12,
+            posts: [
+                UserPost(
+                    activityTitle: "Beach Volleyball",
+                    image: "beach-volleyball",
+                    caption: "Great game at Sentosa! 🏐",
+                    rating: 4.8,
+                    likes: 86,
+                    timestamp: "2h ago",
+                    userImage: "user1",
+                    username: "Sarah Chen"
+                ),
+                UserPost(
+                    activityTitle: "Go-Karting",
+                    image: "kf1-karting",
+                    caption: "Racing day! 🏎️",
+                    rating: 4.9,
+                    likes: 92,
+                    timestamp: "1d ago",
+                    userImage: "user1",
+                    username: "Sarah Chen"
+                )
+            ]
+        ),
+        // Add more friends...
+    ]
+    
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 0) {
+                // Search Bar
+                SearchBar(text: $searchText)
+                    .padding()
+                
+                // Segment Control
+                Picker("View", selection: $selectedSegment) {
+                    Text("Friends").tag(0)
+                    Text("Discover").tag(1)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
+                
+                // Friends List
+                ScrollView {
+                    LazyVStack(spacing: 16) {
+                        ForEach(filteredFriends) { friend in
+                            FriendCard(friend: friend)
+                                .onTapGesture {
+                                    selectedFriend = friend
+                                }
+                        }
+                    }
+                    .padding()
+                }
+            }
+            .background(Color(red: 0.1, green: 0.2, blue: 0.4))
+            .navigationTitle("Friends")
+            .navigationBarItems(leading: Button("Done") {
+                presentationMode.wrappedValue.dismiss()
+            })
+        }
+        .sheet(item: $selectedFriend) { friend in
+            FriendProfileView(friend: friend)
+        }
+    }
+    
+    var filteredFriends: [Friend] {
+        let friendsList = selectedSegment == 0 ? friends : discoveryFriends
+        if searchText.isEmpty {
+            return friendsList
+        }
+        return friendsList.filter { $0.username.localizedCaseInsensitiveContains(searchText) }
+    }
+}
+
+struct FriendCard: View {
+    let friend: Friend
+    
+    var body: some View {
+        HStack(spacing: 15) {
+            // Penguin Character
+            ZStack {
+                Circle()
+                    .fill(Color(red: 0.15, green: 0.25, blue: 0.45))
+                    .frame(width: 60, height: 60)
+                
+                Image("Penguin Character")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 50)
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text(friend.username)
+                        .font(.headline)
+                        .foregroundColor(.white)
+                    
+                    if friend.isOnline {
+                        Circle()
+                            .fill(Color.green)
+                            .frame(width: 8, height: 8)
+                    }
+                }
+                
+                HStack(spacing: 12) {
+                    StatLabel(icon: "star.fill", value: "Lv\(friend.level)")
+                    StatLabel(icon: "figure.walk", value: "\(friend.totalActivities) Activities")
+                }
+                .font(.caption)
+                .foregroundColor(.white.opacity(0.8))
+            }
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .foregroundColor(.white.opacity(0.6))
+        }
+        .padding()
+        .background(Color(red: 0.15, green: 0.25, blue: 0.45))
+        .cornerRadius(15)
+    }
+}
+
+struct StatLabel: View {
+    let icon: String
+    let value: String
+    
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: icon)
+            Text(value)
+        }
+    }
+}
+
+struct SearchBar: View {
+    @Binding var text: String
+    
+    var body: some View {
+        HStack {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.gray)
+            
+            TextField("Search friends...", text: $text)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+        }
+    }
+}
+
+// Add FriendProfileView
+struct FriendProfileView: View {
+    let friend: Friend
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                // Profile Header
+                VStack {
+                    // Penguin Character
+                    ZStack {
+                        Circle()
+                            .fill(Color(red: 0.15, green: 0.25, blue: 0.45))
+                            .frame(width: 120, height: 120)
+                        
+                        Image("Penguin Character")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 100)
+                        
+                        // Level Badge
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.yellow)
+                                        .frame(width: 40, height: 40)
+                                    Text("Lv\(friend.level)")
+                                        .font(.caption)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.white)
+                                }
+                            }
+                        }
+                        .frame(width: 100, height: 100)
+                    }
+                    
+                    Text(friend.username)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                    
+                    // Online Status
+                    HStack {
+                        Circle()
+                            .fill(friend.isOnline ? Color.green : Color.gray)
+                            .frame(width: 8, height: 8)
+                        Text(friend.status)
+                            .foregroundColor(.white.opacity(0.8))
+                    }
+                }
+                
+                // Stats Grid
+                LazyVGrid(columns: [
+                    GridItem(.flexible()),
+                    GridItem(.flexible()),
+                    GridItem(.flexible())
+                ], spacing: 20) {
+                    StatBox(title: "Activities", value: "\(friend.totalActivities)")
+                    StatBox(title: "Level", value: "\(friend.level)")
+                    StatBox(title: "Likes", value: "\(friend.posts.reduce(0) { $0 + $1.likes })")
+                }
+                
+                // Recent Posts
+                VStack(alignment: .leading, spacing: 15) {
+                    Text("Recent Activities")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(.horizontal)
+                    
+                    ForEach(friend.posts) { post in
+                        FriendPostCard(post: post)
+                    }
+                }
+            }
+            .padding(.vertical)
+        }
+        .background(Color(red: 0.1, green: 0.2, blue: 0.4))
+        .navigationBarItems(leading: Button("Done") {
+            presentationMode.wrappedValue.dismiss()
+        })
+    }
+}
+
+// Add supporting views
+struct StatBox: View {
+    let title: String
+    let value: String
+    
+    var body: some View {
+        VStack(spacing: 4) {
+            Text(value)
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+            
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.white.opacity(0.8))
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Color(red: 0.15, green: 0.25, blue: 0.45))
+        .cornerRadius(10)
+    }
+}
+
+struct FriendPostCard: View {
+    let post: UserPost
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // Activity Image
+            Image(post.image)
+                .resizable()
+                .scaledToFill()
+                .frame(height: 150)
+                .clipped()
+                .cornerRadius(10)
+            
+            // Activity Title
+            Text(post.activityTitle)
+                .font(.headline)
+                .foregroundColor(.white)
+            
+            // Caption
+            Text(post.caption)
+                .font(.subheadline)
+                .foregroundColor(.white.opacity(0.8))
+            
+            // Stats Row
+            HStack {
+                // Rating
+                HStack(spacing: 4) {
+                    Image(systemName: "star.fill")
+                        .foregroundColor(.yellow)
+                    Text(String(format: "%.1f", post.rating))
+                }
+                
+                Spacer()
+                
+                // Likes
+                HStack(spacing: 4) {
+                    Image(systemName: "heart.fill")
+                        .foregroundColor(.red)
+                    Text("\(post.likes)")
+                }
+                
+                Text(post.timestamp)
+                    .foregroundColor(.white.opacity(0.6))
+            }
+            .font(.caption)
+            .foregroundColor(.white)
+        }
+        .padding()
+        .background(Color(red: 0.15, green: 0.25, blue: 0.45))
+        .cornerRadius(15)
+        .padding(.horizontal)
     }
 }
