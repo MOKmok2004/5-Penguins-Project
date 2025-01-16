@@ -45,45 +45,45 @@ struct HomeView: View {
             userImage: "user1",
             username: "Sarah Chen",
             activityTitle: "Beach Volleyball Tournament",
-            caption: "Perfect weather for our weekend tournament! 🏐 Join us next time for some fun in the sun! #BeachVolleyball #WeekendFun",
-            image: "beach-volleyball-post",
+            caption: "Amazing tournament at Sentosa! 🏐 #BeachVolleyball",
+            image: "beach-volleyball",  // Updated image name
             likes: 124,
-            shares: 18,
-            rating: 4.5,
-            timestamp: "2 hours ago"
+            shares: 15,
+            rating: 4.8,
+            timestamp: "2 days ago"
         ),
         Post(
             userImage: "user2",
             username: "Mike Rodriguez",
-            activityTitle: "Mountain Trail Adventure",
-            caption: "Epic hiking day at Mount Rainier! The views were absolutely breathtaking 🏃‍♂️🌲 #Hiking #Nature",
-            image: "hiking-trail-post",
+            activityTitle: "Mountain Adventure Week",
+            caption: "Epic hiking trails and stunning views! 🏔️ #Adventure",
+            image: "Mountain Adventure Week",  // Updated image name
             likes: 89,
             shares: 12,
-            rating: 5.0,
-            timestamp: "5 hours ago"
+            rating: 4.7,
+            timestamp: "1 day ago"
         ),
         Post(
             userImage: "user3",
-            username: "Emma Wilson",
+            username: "Emma Wong",
             activityTitle: "Sunset Yoga Session",
-            caption: "Finding peace at our beachside yoga session 🧘‍♀️ #YogaLife #SunsetVibes",
-            image: "sunset-yoga-post",
+            caption: "Finding peace and balance by the beach 🧘‍♀️ #YogaLife",
+            image: "Sunset Yoga Retreat",  // Updated image name
             likes: 156,
-            shares: 23,
-            rating: 4.8,
-            timestamp: "7 hours ago"
+            shares: 18,
+            rating: 4.9,
+            timestamp: "5 hours ago"
         ),
         Post(
             userImage: "user4",
-            username: "Alex Thompson",
-            activityTitle: "Rock Climbing Workshop",
-            caption: "First time climbing outdoors! Amazing experience with great instructors 🧗‍♂️ #RockClimbing",
-            image: "rock-climbing-post",
+            username: "David Tan",
+            activityTitle: "KF1 Karting",
+            caption: "Racing at Singapore's largest karting circuit! 🏎️ #Karting",
+            image: "kf1-karting",  // Updated image name
             likes: 92,
-            shares: 15,
-            rating: 4.7,
-            timestamp: "1 day ago"
+            shares: 8,
+            rating: 4.6,
+            timestamp: "7 hours ago"
         )
     ]
     
@@ -1086,9 +1086,9 @@ struct ProfileView: View {
                             .shadow(radius: 5)
                     }
                     .padding()
-                    
+                        
                     // Points Display
-                    HStack {
+                            HStack {
                         Image(systemName: "star.fill")
                             .foregroundColor(.yellow)
                         Text("1,250 points")
@@ -1136,16 +1136,16 @@ struct ProfileView: View {
                 VStack(alignment: .leading, spacing: 15) {
                     Text("Recent Trips")
                         .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.white)
                         .padding(.horizontal)
                     
                     ForEach(recentTrips) { trip in
                         TripCard(trip: trip)
-                    }
-                }
+                                }
+                            }
                 .padding(.top)
-            }
+                        }
             .padding(.vertical)
         }
         .sheet(isPresented: $showCustomization) {
@@ -1153,7 +1153,7 @@ struct ProfileView: View {
         }
         .sheet(isPresented: $showShop) {
             ShopView(userPoints: 1250)
-        }
+                    }
     }
     
     private func handleAuthAction() {
@@ -1552,17 +1552,17 @@ struct ActivitiesView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedCategory: ActivityCategory?
     @State private var selectedTags: Set<ActivityTag> = []
-    @State private var priceRange: ClosedRange<Double> = 0...200
     @State private var showFilters = true
+    @State private var priceRange: ClosedRange<Double> = 0...200
     
-    // Add the activities data
+    // Updated activities array with correct images
     private let activities = [
         ActivityItem(
             title: "Universal Studios",
             price: 88.0,
             rating: 4.8,
-            description: "Experience thrilling rides and shows at Southeast Asia's first Hollywood movie theme park.",
-            image: "universal-studios-sg", // Updated image name
+            description: "Experience thrilling rides and attractions at Southeast Asia's first Hollywood movie theme park.",
+            image: "Universal Studios",
             category: .outdoor,
             tags: [.entertainment, .adventure]
         ),
@@ -1570,26 +1570,26 @@ struct ActivitiesView: View {
             title: "Gardens by the Bay",
             price: 28.0,
             rating: 4.7,
-            description: "Visit the iconic Supertree Grove and explore the stunning indoor gardens.",
-            image: "gardens-bay-sg", // Updated image name
+            description: "Explore the iconic Supertree Grove and immerse yourself in the beauty of nature.",
+            image: "Gardens by the Bay",
             category: .outdoor,
             tags: [.entertainment]
         ),
         ActivityItem(
             title: "ArtScience Museum",
             price: 21.0,
-            rating: 4.5,
-            description: "Immerse yourself in digital art installations and interactive exhibits.",
-            image: "artscience-museum-sg", // Updated image name
+            rating: 4.6,
+            description: "Discover the intersection of art, science, and technology in this iconic lotus-shaped museum.",
+            image: "artscience",
             category: .indoor,
             tags: [.entertainment]
         ),
         ActivityItem(
             title: "Singapore Zoo",
             price: 48.0,
-            rating: 4.6,
-            description: "Get up close with wildlife in an open, natural setting.",
-            image: "singapore-zoo-sg", // Updated image name
+            rating: 4.8,
+            description: "Get up close with wildlife in their natural habitats at this world-class zoo.",
+            image: "Singapore Zoo",
             category: .outdoor,
             tags: [.entertainment, .adventure]
         ),
@@ -1597,19 +1597,19 @@ struct ActivitiesView: View {
             title: "Indoor Skydiving",
             price: 89.0,
             rating: 4.7,
-            description: "Experience the thrill of flying in a safe indoor environment.",
-            image: "indoor-skydiving-sg", // Updated image name
+            description: "Experience the thrill of skydiving in a safe indoor environment.",
+            image: "Indoor Skydiving",
             category: .indoor,
-            tags: [.adventure, .sports]
+            tags: [.sports, .adventure]
         ),
         ActivityItem(
-            title: "Jewel Changi",
-            price: 0.0,
+            title: "Flock Cafe",
+            price: 25.0,
             rating: 4.9,
-            description: "Visit the world's tallest indoor waterfall and explore the nature-themed mall.",
-            image: "jewel-changi-sg", // Updated image name
+            description: "Enjoy artisanal coffee and brunch in this charming neighborhood cafe.",
+            image: "tiong-bahru",
             category: .indoor,
-            tags: [.entertainment, .dining]
+            tags: [.dining, .cafe]
         )
     ]
     
